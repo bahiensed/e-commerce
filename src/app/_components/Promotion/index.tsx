@@ -1,19 +1,22 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import classes from './index.module.scss'
 
 const Promotion = () => {
+  const targetDate = useMemo(() => {
+    const date = new Date()
+    date.setDate(date.getDate() + 3)
+    return date
+  }, []) // Empty dependency array means this will only run once
+
   const [time, setTime] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   })
-
-  const targetDate = new Date()
-  targetDate.setDate(targetDate.getDate() + 3)
 
   useEffect(() => {
     const timerInterval = setInterval(() => {
