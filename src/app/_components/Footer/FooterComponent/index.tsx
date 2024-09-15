@@ -14,7 +14,7 @@ import classes from './index.module.scss'
 
 const FooterComponent = ({ footer }: { footer: Footer }) => {
   const pathname = usePathname()
-  const navItems = footer?.navItems || []
+  const navItems = footer?.navItems || [] // Provide a fallback for navItems if it's null or undefined
 
   return (
     <footer className={noHeaderFooterUrls.includes(pathname) ? classes.hide : ''}>
@@ -43,7 +43,8 @@ const FooterComponent = ({ footer }: { footer: Footer }) => {
               <Image src="/logo-white.svg" alt="logo" width={170} height={50} />
             </Link>
 
-            <p>{footer.copyright || '© Rumor by Lisa Nunes, 2024'}</p>
+            {/* Add fallback for footer.copyright */}
+            <p>{footer?.copyright || '© Rumor by Lisa Nunes, 2024'}</p>
 
             <div className={classes.socialLinks}>
               {navItems.map(item => {
@@ -58,7 +59,7 @@ const FooterComponent = ({ footer }: { footer: Footer }) => {
                     className={classes.SocialLinkItem}
                   >
                     <Image
-                      src={icon?.url}
+                      src={icon?.url || '/default-icon.svg'} // Provide a fallback for the icon URL
                       alt={item.link.label}
                       width={24}
                       height={24}
