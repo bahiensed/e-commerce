@@ -28,11 +28,13 @@ export type Props = {
   relationTo?: 'products'
   populateBy?: 'collection' | 'selection'
   showPageRange?: boolean
-  onResultChange?: (result: Result) => void // eslint-disable-line no-unused-vars
+  onResultChange?: (result: Result) => void
   limit?: number
   populatedDocs?: ArchiveBlockProps['populatedDocs']
   populatedDocsTotal?: ArchiveBlockProps['populatedDocsTotal']
+  selectedDocs?: ArchiveBlockProps['selectedDocs']
   categories?: ArchiveBlockProps['categories']
+  sort?: string // Added sort here
 }
 
 export const CollectionArchive: React.FC<Props> = props => {
@@ -46,11 +48,17 @@ export const CollectionArchive: React.FC<Props> = props => {
     limit = 10,
     populatedDocs,
     populatedDocsTotal,
+    selectedDocs,
+    populateBy,
   } = props
 
   const [results, setResults] = useState<Result>({
     totalDocs: typeof populatedDocsTotal === 'number' ? populatedDocsTotal : 0,
-    docs: (populatedDocs?.map(doc => doc.value) || []) as [],
+    docs: (populatedDocs?.map(doc => doc.value) ||
+      selectedDocs
+        ?.map(doc => (typeof doc.value === 'object' ? doc.value : null))
+        .filter(Boolean) ||
+      []) as Product[],
     page: 1,
     totalPages: 1,
     hasPrevPage: false,
@@ -81,9 +89,23 @@ export const CollectionArchive: React.FC<Props> = props => {
   }, [isLoading, scrollToRef, results])
 
   useEffect(() => {
-    // hydrate the block with fresh content after first render
-    // don't show loader unless the request takes longer than x ms
-    // and don't show it during initial hydration
+    if (populateBy === 'selection' && selectedDocs) {
+      setResults({
+        totalDocs: selectedDocs.length,
+        docs: selectedDocs
+          .map(doc => (typeof doc.value === 'object' ? doc.value : null))
+          .filter(Boolean) as Product[],
+        page: 1,
+        totalPages: 1,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevPage: 1,
+        nextPage: 1,
+      })
+      setIsLoading(false)
+      return
+    }
+
     const timer: NodeJS.Timeout = setTimeout(() => {
       if (hasHydrated) {
         setIsLoading(true)
@@ -131,7 +153,7 @@ export const CollectionArchive: React.FC<Props> = props => {
           }
         }
       } catch (err) {
-        console.warn(err) // eslint-disable-line no-console
+        //console.warn(err)
         setIsLoading(false)
         setError(`Unable to load "${relationTo} archive" data at this time.`)
       }
@@ -142,7 +164,7 @@ export const CollectionArchive: React.FC<Props> = props => {
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [page, categoryFilters, relationTo, onResultChange, sort, limit])
+  }, [page, categoryFilters, relationTo, onResultChange, sort, limit, selectedDocs, populateBy])
 
   return (
     <div className={[classes.collectionArchive, className].filter(Boolean).join(' ')}>
