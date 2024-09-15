@@ -43,7 +43,7 @@ const FooterComponent = ({ footer }: { footer: Footer }) => {
               <Image src="/logo-white.svg" alt="logo" width={170} height={50} />
             </Link>
 
-            <p>{footer.copyright}</p>
+            <p>{footer.copyright || '© Rumor by Lisa Nunes, 2024'}</p>
 
             <div className={classes.socialLinks}>
               {navItems.map(item => {
