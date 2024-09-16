@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use client'
 
 import React from 'react'
@@ -13,6 +14,9 @@ import classes from './index.module.scss'
 export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
   const navItems = header?.navItems || []
   const { user } = useAuth()
+
+  console.log('Header navItems:', navItems)
+  console.log('User status:', user)
 
   return (
     <nav className={[classes.nav, user === undefined && classes.hide].filter(Boolean).join(' ')}>

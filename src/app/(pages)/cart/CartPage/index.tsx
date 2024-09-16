@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use client'
 
 import React, { Fragment } from 'react'
@@ -24,8 +25,11 @@ export const CartPage: React.FC<{
   const { productsPage } = settings || {}
 
   const { user } = useAuth()
-
   const { cart, cartIsEmpty, addItemToCart, cartTotal, hasInitializedCart } = useCart()
+
+  console.log('Cart:', cart)
+  console.log('User:', user)
+  console.log('Has Initialized Cart:', hasInitializedCart)
 
   return (
     <Fragment>
@@ -70,6 +74,8 @@ export const CartPage: React.FC<{
                 {/* CART ITEM LIST */}
                 <ul className={classes.itemsList}>
                   {cart?.items?.map((item, index) => {
+                    console.log('Cart Item:', item)
+
                     if (typeof item.product === 'object') {
                       const {
                         quantity,
@@ -78,7 +84,6 @@ export const CartPage: React.FC<{
                       } = item
 
                       const isLast = index === (cart?.items?.length || 0) - 1
-
                       const metaImage = meta?.image
 
                       return (

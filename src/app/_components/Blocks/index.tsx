@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Fragment } from 'react'
 
 import { Page } from '../../../payload/payload-types.js'
@@ -24,6 +25,8 @@ export const Blocks: React.FC<{
 }> = props => {
   const { disableTopPadding, blocks } = props
 
+  console.log('Blocks:', blocks)
+
   const hasBlocks = blocks && Array.isArray(blocks) && blocks.length > 0
 
   if (hasBlocks) {
@@ -31,6 +34,8 @@ export const Blocks: React.FC<{
       <Fragment>
         {blocks.map((block, index) => {
           const { blockName, blockType } = block
+
+          console.log('Rendering block:', blockName, blockType)
 
           if (blockType && blockType in blockComponents) {
             const Block = blockComponents[blockType]

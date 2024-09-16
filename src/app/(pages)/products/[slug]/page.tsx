@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react'
 import { Metadata } from 'next'
 import { draftMode } from 'next/headers'
@@ -11,8 +12,6 @@ import { PaywallBlocks } from '../../../_components/PaywallBlocks'
 import { ProductHero } from '../../../_heros/Product'
 import { generateMeta } from '../../../_utilities/generateMeta'
 
-// Force this page to be dynamic so that Next.js does not cache it
-// See the note in '../../../[slug]/page.tsx' about this
 export const dynamic = 'force-dynamic'
 
 export default async function Product({ params: { slug } }) {
@@ -26,15 +25,19 @@ export default async function Product({ params: { slug } }) {
       slug,
       draft: isDraftMode,
     })
+    console.log('Fetched product:', product)
   } catch (error) {
-    console.error(error) // eslint-disable-line no-console
+    console.error('Error fetching product:', error) // eslint-disable-line no-console
   }
 
   if (!product) {
+    console.warn('Product not found, redirecting to 404') // eslint-disable-line no-console
     notFound()
   }
 
   const { relatedProducts } = product
+
+  console.log('Related products:', relatedProducts)
 
   return (
     <>
@@ -68,8 +71,10 @@ export default async function Product({ params: { slug } }) {
 export async function generateStaticParams() {
   try {
     const products = await fetchDocs<ProductType>('products')
+    console.log('Static params for products:', products)
     return products?.map(({ slug }) => slug)
   } catch (error) {
+    console.error('Error generating static params:', error) // eslint-disable-line no-console
     return []
   }
 }
@@ -85,7 +90,10 @@ export async function generateMetadata({ params: { slug } }): Promise<Metadata> 
       slug,
       draft: isDraftMode,
     })
-  } catch (error) {}
+    console.log('Product metadata:', product)
+  } catch (error) {
+    console.error('Error generating metadata:', error) // eslint-disable-line no-console
+  }
 
   return generateMeta({ doc: product })
 }

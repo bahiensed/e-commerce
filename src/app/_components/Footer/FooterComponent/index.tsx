@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use client'
 
 import React from 'react'
@@ -15,12 +16,17 @@ import classes from './index.module.scss'
 const FooterComponent = ({ footer }: { footer?: Footer }) => {
   const pathname = usePathname()
 
+  console.log('Footer data:', footer)
+
   // If footer or navItems are not available, do not render the footer
   if (!footer || !footer.navItems) {
+    console.warn('No footer or navItems available') // eslint-disable-line no-console
     return null // Exit early if footer or navItems is null/undefined
   }
 
   const navItems = footer.navItems || [] // Fallback to empty array if navItems is undefined
+
+  console.log('Footer navItems:', navItems)
 
   return (
     <footer className={noHeaderFooterUrls.includes(pathname) ? classes.hide : ''}>
