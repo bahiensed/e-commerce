@@ -13,11 +13,14 @@ import { Gutter } from '../../Gutter'
 import classes from './index.module.scss'
 
 const FooterComponent = ({ footer }: { footer?: Footer }) => {
-  // Mark footer as possibly undefined
   const pathname = usePathname()
 
-  // Check if footer exists before accessing navItems
-  const navItems = footer?.navItems || []
+  // If footer or navItems are not available, do not render the footer
+  if (!footer || !footer.navItems) {
+    return null // Exit early if footer or navItems is null/undefined
+  }
+
+  const navItems = footer.navItems || [] // Fallback to empty array if navItems is undefined
 
   return (
     <footer className={noHeaderFooterUrls.includes(pathname) ? classes.hide : ''}>
@@ -47,7 +50,7 @@ const FooterComponent = ({ footer }: { footer?: Footer }) => {
             </Link>
 
             {/* Add fallback for footer.copyright */}
-            <p>{footer?.copyright || '© Rumor by Lisa Nunes, 2024'}</p>
+            <p>{footer.copyright || '© Rumor by Lisa Nunes, 2024'}</p>
 
             <div className={classes.socialLinks}>
               {navItems.length > 0 ? ( // Only map over navItems if it's not empty
