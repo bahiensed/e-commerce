@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use client'
 
 import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react'
@@ -83,12 +84,10 @@ export const CollectionArchive: React.FC<Props> = props => {
   }, [])
 
   useEffect(() => {
-    if (!isLoading && typeof results.page !== 'undefined') {
-      // scrollToRef()
-    }
-  }, [isLoading, scrollToRef, results])
+    console.log('Selected Docs:', selectedDocs) // Log selectedDocs
+    console.log('Populated Docs:', populatedDocs) // Log populatedDocs
+    console.log('Results Docs:', results.docs) // Log results.docs
 
-  useEffect(() => {
     if (populateBy === 'selection' && selectedDocs) {
       setResults({
         totalDocs: selectedDocs.length,
@@ -153,7 +152,7 @@ export const CollectionArchive: React.FC<Props> = props => {
           }
         }
       } catch (err) {
-        //console.warn(err)
+        console.warn('Error fetching data:', err)
         setIsLoading(false)
         setError(`Unable to load "${relationTo} archive" data at this time.`)
       }
@@ -183,9 +182,13 @@ export const CollectionArchive: React.FC<Props> = props => {
         )}
 
         <div className={classes.grid}>
-          {results.docs?.map((result, index) => {
-            return <Card key={index} relationTo="products" doc={result} showCategories />
-          })}
+          {results.docs && results.docs.length > 0 ? ( // Check if docs is not null and has elements
+            results.docs.map((result, index) => (
+              <Card key={index} relationTo="products" doc={result} showCategories />
+            ))
+          ) : (
+            <div>No products available</div> // Fallback if no docs
+          )}
         </div>
 
         {results.totalPages > 1 && (
