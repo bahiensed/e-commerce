@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { Footer, Media } from '../../../../payload/payload-types'
+import { Footer } from '../../../../payload/payload-types'
 import { inclusions, noHeaderFooterUrls } from '../../../constants'
 import { Button } from '../../Button'
 import { Gutter } from '../../Gutter'
@@ -15,12 +15,9 @@ import classes from './index.module.scss'
 const FooterComponent = ({ footer }: { footer?: Footer }) => {
   const pathname = usePathname()
 
-  // If footer or navItems are not available, do not render the footer
-  if (!footer || !footer.navItems) {
-    return null // Exit early if footer or navItems is null/undefined
+  if (!footer) {
+    return null // Return early if footer is null
   }
-
-  const navItems = footer.navItems || [] // Fallback to empty array if navItems is undefined
 
   return (
     <footer className={noHeaderFooterUrls.includes(pathname) ? classes.hide : ''}>
@@ -49,36 +46,35 @@ const FooterComponent = ({ footer }: { footer?: Footer }) => {
               <Image src="/logo-white.svg" alt="logo" width={170} height={50} />
             </Link>
 
-            {/* Add fallback for footer.copyright */}
-            <p>{footer.copyright || '© Rumor by Lisa Nunes, 2024'}</p>
+            {/* Render copyright */}
+            <p>{footer.copyright || 'Default Footer Text'}</p>
 
+            {/* Temporarily remove the navItems.map() block */}
+            {/* 
             <div className={classes.socialLinks}>
-              {navItems.length > 0 ? ( // Only map over navItems if it's not empty
-                navItems.map(item => {
-                  const icon = item?.link?.icon as Media
+              {navItems.map(item => {
+                const icon = item?.link?.icon as Media
 
-                  return (
-                    <Button
-                      key={item.link.label}
-                      el="link"
-                      href={item.link.url}
-                      newTab={true}
-                      className={classes.SocialLinkItem}
-                    >
-                      <Image
-                        src={icon?.url || '/default-icon.svg'} // Provide a fallback for the icon URL
-                        alt={item.link.label}
-                        width={24}
-                        height={24}
-                        className={classes.socialIcon}
-                      />
-                    </Button>
-                  )
-                })
-              ) : (
-                <p>No social links available</p> // Fallback if navItems is empty
-              )}
+                return (
+                  <Button
+                    key={item.link.label}
+                    el="link"
+                    href={item.link.url}
+                    newTab={true}
+                    className={classes.SocialLinkItem}
+                  >
+                    <Image
+                      src={icon?.url || '/default-icon.svg'}
+                      alt={item.link.label}
+                      width={24}
+                      height={24}
+                      className={classes.socialIcon}
+                    />
+                  </Button>
+                )
+              })}
             </div>
+            */}
           </div>
         </Gutter>
       </div>
