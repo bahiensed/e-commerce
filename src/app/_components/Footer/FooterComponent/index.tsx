@@ -18,15 +18,17 @@ const FooterComponent = ({ footer }: { footer?: Footer }) => {
 
   console.log('Footer data:', footer)
 
-  // If footer or navItems are not available, do not render the footer
-  if (!footer || !footer.navItems) {
-    console.warn('No footer or navItems available') // eslint-disable-line no-console
-    return null // Exit early if footer or navItems is null/undefined
+  // Fallback footer content if footer data is null
+  if (!footer) {
+    console.warn('Footer data is null, using fallback') // eslint-disable-line no-console
+    footer = {
+      id: 'default-footer-id', // Add a default id
+      copyright: '© Default Company, 2024',
+      navItems: [], // You can provide some default items or leave it empty
+    }
   }
 
   const navItems = footer.navItems || [] // Fallback to empty array if navItems is undefined
-
-  console.log('Footer navItems:', navItems)
 
   return (
     <footer className={noHeaderFooterUrls.includes(pathname) ? classes.hide : ''}>
@@ -55,11 +57,10 @@ const FooterComponent = ({ footer }: { footer?: Footer }) => {
               <Image src="/logo-white.svg" alt="logo" width={170} height={50} />
             </Link>
 
-            {/* Add fallback for footer.copyright */}
-            <p>{footer.copyright || '© Rumor by Lisa Nunes, 2024'}</p>
+            <p>{footer.copyright}</p>
 
             <div className={classes.socialLinks}>
-              {navItems.length > 0 ? ( // Only map over navItems if it's not empty
+              {navItems.length > 0 ? (
                 navItems.map(item => {
                   const icon = item?.link?.icon as Media
 
@@ -82,7 +83,7 @@ const FooterComponent = ({ footer }: { footer?: Footer }) => {
                   )
                 })
               ) : (
-                <p>No social links available</p> // Fallback if navItems is empty
+                <p>No social links available</p>
               )}
             </div>
           </div>

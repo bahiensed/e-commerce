@@ -15,7 +15,6 @@ export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
   const navItems = header?.navItems || []
   const { user } = useAuth()
 
-  console.log('Header navItems:', navItems)
   console.log('User status:', user)
 
   return (
@@ -23,12 +22,11 @@ export const HeaderNav: React.FC<{ header: HeaderType }> = ({ header }) => {
       {navItems.map(({ link }, i) => {
         return <CMSLink key={i} {...link} appearance="none" />
       })}
-      {user && (
+      {user ? (
         <Link href="/account" className={classes.link}>
           Minha Conta
         </Link>
-      )}
-      {!user && (
+      ) : (
         <Button
           el="link"
           href="/login"
